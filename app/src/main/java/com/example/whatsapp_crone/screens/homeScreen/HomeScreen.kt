@@ -15,12 +15,13 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.CheckCircle
+import androidx.compose.material.icons.automirrored.filled.Message
+import androidx.compose.material.icons.filled.AddComment
+import androidx.compose.material.icons.filled.CameraAlt
+import androidx.compose.material.icons.filled.DataUsage
 import androidx.compose.material.icons.filled.MoreVert
-import androidx.compose.material.icons.filled.Person
+import androidx.compose.material.icons.filled.People
 import androidx.compose.material.icons.filled.Phone
-import androidx.compose.material.icons.filled.Search
-import androidx.compose.material.icons.filled.ShoppingCart
 import androidx.compose.material3.BottomAppBar
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -49,14 +50,17 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.whatsapp_crone.R
+import com.example.whatsapp_crone.screens.Screen
 import com.example.whatsapp_crone.ui.theme.Green
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun HomeScreen(modifier: Modifier = Modifier) {
+fun HomeScreen(
+    modifier: Modifier = Modifier,
+    onChangeNavigator: ((Screen) -> Unit)? = null
+) {
 
     var showMenu by remember { mutableStateOf(false) }
-
 
     Scaffold(
         modifier = modifier,
@@ -74,7 +78,7 @@ fun HomeScreen(modifier: Modifier = Modifier) {
                         onClick = {}
                     ) {
                         Icon(
-                            Icons.Filled.ShoppingCart,
+                            Icons.Filled.CameraAlt,
                             contentDescription = ""
                         )
                     }
@@ -128,7 +132,7 @@ fun HomeScreen(modifier: Modifier = Modifier) {
                 containerColor = Green,
             ) {
                 Icon(
-                    Icons.Filled.CheckCircle,
+                    Icons.Default.AddComment,
                     contentDescription = ""
                 )
             }
@@ -148,7 +152,7 @@ fun HomeScreen(modifier: Modifier = Modifier) {
                     },
                     icon = {
                         Icon(
-                            Icons.Filled.CheckCircle,
+                            Icons.AutoMirrored.Filled.Message,
                             contentDescription = ""
                         )
                     })
@@ -160,7 +164,7 @@ fun HomeScreen(modifier: Modifier = Modifier) {
                     },
                     icon = {
                         Icon(
-                            Icons.Filled.Search,
+                            Icons.Filled.DataUsage,
                             contentDescription = ""
                         )
                     }
@@ -173,7 +177,7 @@ fun HomeScreen(modifier: Modifier = Modifier) {
                     },
                     icon = {
                         Icon(
-                            Icons.Filled.Person,
+                            Icons.Filled.People,
                             contentDescription = ""
                         )
                     }
@@ -204,7 +208,9 @@ fun HomeScreen(modifier: Modifier = Modifier) {
             )
         ) {
             items(count = 20) {
-                MessageContact()
+                MessageContact(onClick = {
+                    onChangeNavigator?.invoke(Screen.CHAT)
+                })
             }
         }
     }
@@ -212,35 +218,48 @@ fun HomeScreen(modifier: Modifier = Modifier) {
 }
 
 @Composable
-fun MessageContact(modifier: Modifier = Modifier) {
+fun MessageContact(modifier: Modifier = Modifier, onClick: () -> Unit) {
     Card(
         modifier = modifier.fillMaxWidth(),
+        onClick = onClick,
         colors = CardDefaults.cardColors(
             containerColor = MaterialTheme.colorScheme.background
         ),
         shape = RoundedCornerShape(0.dp)
     ) {
         Row(
-            verticalAlignment = Alignment.CenterVertically
+            modifier = Modifier.fillMaxWidth().padding(8.dp),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.SpaceBetween
         ) {
-            Image(
-                modifier = Modifier
-                    .size(60.dp)
-                    .clip(shape = CircleShape),
-                painter = painterResource(R.drawable.ic_launcher_background),
-                contentDescription = ""
-            )
-            Column(
-                modifier = Modifier
-                    .fillMaxHeight()
-                    .padding(
-                        horizontal = 8.dp
-                    ),
-                verticalArrangement = Arrangement.spacedBy(4.dp)
-            ) {
-                Text(text = "David", style = MaterialTheme.typography.titleSmall, fontSize = 16.sp)
-                Text(text = "Ola, bom dia!", style = MaterialTheme.typography.bodySmall)
+            Row {
+
+                Image(
+                    modifier = Modifier
+                        .size(60.dp)
+                        .clip(shape = CircleShape),
+                    painter = painterResource(R.drawable.ic_launcher_background),
+                    contentDescription = ""
+                )
+                Column(
+                    modifier = Modifier
+                        .fillMaxHeight()
+                        .padding(
+                            horizontal = 8.dp
+                        ),
+                    verticalArrangement = Arrangement.spacedBy(4.dp)
+                ) {
+                    Text(
+                        text = "David",
+                        style = MaterialTheme.typography.titleSmall,
+                        fontSize = 16.sp
+                    )
+                    Text(text = "Ola, bom dia!", style = MaterialTheme.typography.bodySmall)
+                }
             }
+
+            Text(text = "06:20", style = MaterialTheme.typography.bodySmall)
+
         }
     }
 }
